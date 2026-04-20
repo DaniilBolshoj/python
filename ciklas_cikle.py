@@ -38,27 +38,52 @@ boto1_paskutinis_skaicius = 0
 boto2_paskutinis_skaicius = 0
 
 
+def choose_number(available, condition):
+    candidates = [x for x in available if condition(x)]
+    if not candidates:
+        candidates = available
+    return random.choice(candidates)
+
+
 while len(skaiciai) > 0:
     if boto1_skaicius > boto2_skaicius:
-        boto1_paskutinis_skaicius = random.choice([x for x in skaiciai if x > boto2_paskutinis_skaicius])
+        boto1_paskutinis_skaicius = choose_number(
+            skaiciai,
+            lambda x: x > boto2_paskutinis_skaicius,
+        )
     elif boto1_skaicius < boto2_skaicius:
-        boto1_paskutinis_skaicius = random.choice([x for x in skaiciai if x < boto2_paskutinis_skaicius])
+        boto1_paskutinis_skaicius = choose_number(
+            skaiciai,
+            lambda x: x < boto2_paskutinis_skaicius,
+        )
     else:
-        boto1_paskutinis_skaicius = random.choice([x for x in skaiciai if x > boto2_paskutinis_skaicius and x < boto1_paskutinis_skaicius])
-    
+        boto1_paskutinis_skaicius = choose_number(
+            skaiciai,
+            lambda x: x > boto2_paskutinis_skaicius and x < boto1_paskutinis_skaicius,
+        )
+
     skaiciai.remove(boto1_paskutinis_skaicius)
-    
+
     if boto2_skaicius > boto1_skaicius:
-        boto2_paskutinis_skaicius = random.choice([x for x in skaiciai if x > boto1_paskutinis_skaicius])
+        boto2_paskutinis_skaicius = choose_number(
+            skaiciai,
+            lambda x: x > boto1_paskutinis_skaicius,
+        )
     elif boto2_skaicius < boto1_skaicius:
-        boto2_paskutinis_skaicius = random.choice([x for x in skaiciai if x < boto1_paskutinis_skaicius])
+        boto2_paskutinis_skaicius = choose_number(
+            skaiciai,
+            lambda x: x < boto1_paskutinis_skaicius,
+        )
     else:
-        boto2_paskutinis_skaicius = random.choice([x for x in skaiciai if x > boto1_paskutinis_skaicius and x < boto2_paskutinis_skaicius])
-    
+        boto2_paskutinis_skaicius = choose_number(
+            skaiciai,
+            lambda x: x > boto1_paskutinis_skaicius and x < boto2_paskutinis_skaicius,
+        )
+
     skaiciai.remove(boto2_paskutinis_skaicius)
-    
+
     print(f'Boto 1 pasirinkimas: {boto1_paskutinis_skaicius}, Boto 2 pasirinkimas: {boto2_paskutinis_skaicius}')
-    
+
     if boto1_paskutinis_skaicius > boto2_paskutinis_skaicius:
         print('Boto 1 laimėjo!')
         boto1_skaicius += 1
@@ -67,5 +92,8 @@ while len(skaiciai) > 0:
         boto2_skaicius += 1
     else:
         print('Lygiosios!')
-        
-print(f'Galutinis rezultatas - Boto 1: {boto1_skaicius}, Boto 2: {boto2_skaicius}')
+
+galutinis_rezultatas_pirmo = boto1_skaicius
+galutinis_rezultatas_antro = boto2_skaicius
+
+print(f'Galutinis rezultatas - Boto 1: {galutinis_rezultatas_pirmo}, Boto 2: {galutinis_rezultatas_antro}')
